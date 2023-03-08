@@ -1,0 +1,4 @@
+sources:
+  "3.5":
+    url: "https://github.com/vpinball/pinmame/archive/refs/tags/v3.5-217-bd54096.zip"
+    sha256: "fb0dde96e72c723cd5acad7a603ccef4867b23111a2eab7e640a8902266c23a1"
