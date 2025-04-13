@@ -1,0 +1,5 @@
+sources:
+  "3.0.0-pre":
+    url:
+      - "https://github.com/libsdl-org/SDL_mixer/archive/6509f9f2117513bd8d6677c4370194be932b1fe8.zip"
+    sha256: "c1a89f7a67cb1efed21766eebd0a1d67054cad52fd2511cf5bed7cf56e465fc1"

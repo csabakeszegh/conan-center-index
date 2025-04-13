@@ -3,3 +3,5 @@ versions:
     folder: "cmake"
   "2.0.4":
     folder: "all"
+  "3.0.0-pre":
+    folder: "3.x"
