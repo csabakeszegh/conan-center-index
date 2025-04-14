@@ -1,4 +1,6 @@
 sources:
-  "3.5":
-    url: "https://github.com/vpinball/pinmame/archive/refs/tags/v3.5-217-bd54096.zip"
-    sha256: "fb0dde96e72c723cd5acad7a603ccef4867b23111a2eab7e640a8902266c23a1"
+  "cci.20250414":
+    url: "https://github.com/vpinball/pinmame/archive/06702fdafcc33bebfd249b1b63cbda564824dbf3.zip"
+    sha256: "6b11bdf57c931ff6d7150beb35dd7f113e317e3cbdd2e9458cef4321612e38c2"
+patches:
+- patch_file: "patches/001_cmake_toolchain_file_support_fix.patch"

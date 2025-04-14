@@ -1,0 +1,63 @@
+--- cmake/libpinmame/CMakeLists.txt	2025-04-14 20:15:24.944510290 +0000
++++ CMakeLists.txt	2025-04-14 20:14:54.340852731 +0000
+@@ -1,5 +1,16 @@
+ cmake_minimum_required(VERSION 3.25)
+ 
++file(READ src/version.h version)
++string(REGEX MATCH "VERSION_MAJOR[ ]+([0-9]+)" _tmp ${version})
++set(VERSION_MAJOR "${CMAKE_MATCH_1}")
++string(REGEX MATCH "VERSION_MINOR[ ]+([0-9]+)" _tmp ${version})
++set(VERSION_MINOR "${CMAKE_MATCH_1}")
++string(REGEX MATCH "VERSION_REV[ ]+([0-9]+)" _tmp ${version})
++set(VERSION_REV "${CMAKE_MATCH_1}")
++
++project(pinmame VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}"
++   DESCRIPTION "Cross-platform PinMAME library")
++
+ set(PLATFORM "win" CACHE STRING "Platform")
+ set(ARCH "x64" CACHE STRING "Arch")
+ 
+@@ -29,17 +40,6 @@
+    set(CMAKE_ANDROID_ARCH_ABI arm64-v8a)
+ endif()
+ 
+-file(READ src/version.h version)
+-string(REGEX MATCH "VERSION_MAJOR[ ]+([0-9]+)" _tmp ${version})
+-set(VERSION_MAJOR "${CMAKE_MATCH_1}")
+-string(REGEX MATCH "VERSION_MINOR[ ]+([0-9]+)" _tmp ${version})
+-set(VERSION_MINOR "${CMAKE_MATCH_1}")
+-string(REGEX MATCH "VERSION_REV[ ]+([0-9]+)" _tmp ${version})
+-set(VERSION_REV "${CMAKE_MATCH_1}")
+-
+-project(pinmame VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}"
+-   DESCRIPTION "Cross-platform PinMAME library")
+-
+ if(PLATFORM STREQUAL "win")
+    if(ARCH STREQUAL "x86")
+       add_compile_definitions(WIN32)
+@@ -719,10 +719,11 @@
+    install(FILES src/libpinmame/libpinmame.h DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+ 
+    if(PLATFORM STREQUAL "win" OR PLATFORM STREQUAL "macos" OR PLATFORM STREQUAL "linux")
++      find_package(Threads REQUIRED)
+       add_executable(pinmame_test
+          src/libpinmame/test.cpp
+       )
+-      target_link_libraries(pinmame_test PUBLIC pinmame_shared)
++      target_link_libraries(pinmame_test PUBLIC pinmame_shared Threads::Threads)
+    endif()
+ endif()
+ 
+@@ -752,10 +753,11 @@
+          src/libpinmame/test.cpp
+       )
+ 
++      find_package(Threads REQUIRED)
+       if(PLATFORM STREQUAL "win")
+          target_link_libraries(pinmame_test_s PUBLIC pinmame_static winmm)
+       else()
+-         target_link_libraries(pinmame_test_s PUBLIC pinmame_static)
++         target_link_libraries(pinmame_test_s PUBLIC pinmame_static Threads::Threads)
+       endif()
+    endif()
+ endif()

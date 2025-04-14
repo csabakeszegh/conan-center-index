@@ -1,20 +1,19 @@
 from conan import ConanFile
-from conan.tools.files import get, copy
-from conan.tools.cmake import CMake, cmake_layout
+from conan.tools.files import get, copy, apply_conandata_patches, export_conandata_patches
+from conan.tools.cmake import CMake, cmake_layout, CMakeToolchain
 from conan.errors import ConanInvalidConfiguration
 import os
 import shutil
 
 class PinmameConan(ConanFile):
-    name = "libpinmame"
+    name = "pinmame"
     description = "Pinball Multiple Arcade Machine Emulator Library"
     url = "https://github.com/conan-io/conan-center-index"
     homepage = "https://github.com/vpinball/pinmame"
     license = "old MAME/BSD"
     topics = ("emulator", "emulation", "pinball", "pinmame" )
     settings = "os", "arch", "compiler", "build_type"
-    requires = "zlib/1.2.13"
-    generators = "CMakeDeps", "CMakeToolchain"
+    generators = "CMakeDeps"
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
@@ -27,23 +26,43 @@ class PinmameConan(ConanFile):
     def layout(self):
         cmake_layout(self, src_folder="src")
 
+    def export_sources(self):
+        export_conandata_patches(self)
+
     def source(self):
         get(self, **self.conan_data["sources"][self.version], strip_root=True)
 
-    def build(self):
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["BUILD_SHARED"] = self.options.shared
+        tc.variables["BUILD_STATIC"] = not self.options.shared
+        if self.settings.os == "Windows":
+            tc.variables["PLATFORM"] = "win"
+        if self.settings.os == "Linux":
+            tc.variables["PLATFORM"] = "linux"
         if self.settings.os == "iOS":
-            cmakelists_txt = "CMakeLists_ios-arm64.txt"
-        elif self.settings.os == "Macos":
-            cmakelists_txt = "CMakeLists_osx-x64.txt"
-        elif self.settings.os == "Android":
-            cmakelists_txt = "CMakeLists_android-arm64-v8a.txt"
-        elif self.settings.os == "Windows":
-            cmakelists_txt = "CMakeLists_win-x64.txt"
-        elif self.settings.os == "Linux":
-            cmakelists_txt = "CMakeLists_linux-x64.txt"
-        else:
-            raise ConanInvalidConfiguration("Invalid config")
-        shutil.copy(os.path.join(self.folders.source_folder, "cmake", "libpinmame", cmakelists_txt), os.path.join(self.folders.source_folder, "CMakeLists.txt"))
+            if self.settings.sdk == "iphoneos":
+                tc.variables["PLATFORM"] = "ios"
+            if self.settings.sdk == "iphonesimulator":
+                tc.variables["PLATFORM"] = "ios-simulator"
+        if self.settings.os == "tvOS":
+            tc.variables["PLATFORM"] = "tvos"
+        if self.settings.os == "Android":
+            tc.variables["PLATFORM"] = "android"
+        if self.settings.os == "Macos":
+            tc.variables["PLATFORM"] = "macos"
+
+        if self.settings.arch == "x86_64":
+            tc.variables["ARCH"] = "x64"
+        if self.settings.arch == "armv8":
+            tc.variables["ARCH"] = "arm64"
+
+        tc.generate()
+
+    def build(self):
+        cmakelists_txt = os.path.join(self.folders.source_folder, "CMakeLists.txt")
+        apply_conandata_patches(self)
+        shutil.copy(os.path.join(self.folders.source_folder, "cmake", "libpinmame", "CMakeLists.txt"), cmakelists_txt)
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
@@ -61,3 +80,4 @@ class PinmameConan(ConanFile):
         self.cpp_info.set_property("cmake_file_name", "libpinmame")
         self.cpp_info.set_property("cmake_target_name", "libpinmame::libpinmame")
         self.cpp_info.libs = ["pinmame"]
+        self.cpp_info.system_libs.append("pthread")

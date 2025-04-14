@@ -1,7 +1,7 @@
 #include <libpinmame.h>
 #include <stdio.h>
 
-void CALLBACK Game(PinmameGame *game) {
+void PINMAMECALLBACK Game(PinmameGame *game, const void* p_userData) {
   printf("Game(): name=%s, description=%s, manufacturer=%s, year=%s, "
          "flags=%lu, found=%d\n",
          game->name, game->description, game->manufacturer, game->year,
@@ -9,7 +9,7 @@ void CALLBACK Game(PinmameGame *game) {
 }
 
 int main(int argc, char *argv[]) {
-  PinmameConfig config = {AUDIO_FORMAT_FLOAT,
+  PinmameConfig config = {PINMAME_AUDIO_FORMAT_FLOAT,
                           44100,
                           "",
                           0,
@@ -27,6 +27,6 @@ int main(int argc, char *argv[]) {
   PinmameSetHandleKeyboard(0);
   PinmameSetHandleMechanics(0);
 
-  PinmameGetGames(&Game);
+  PinmameGetGames(&Game, 0);
   return 0;
 }
