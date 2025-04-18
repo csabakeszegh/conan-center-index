@@ -1,0 +1,4 @@
+sources:
+  "cci.20250418":
+    url: "https://github.com/sigrokproject/libserialport/archive/21b3dfe5f68c205be4086469335fd2fc2ce11ed2.zip"
+    sha256: "8cac3873785312ac9e4a3f6406652e2cac0b0eac3f5fecbed78810d5111bf96e"
