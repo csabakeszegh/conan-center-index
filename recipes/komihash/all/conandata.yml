@@ -1,0 +1,4 @@
+sources:
+  "5.25":
+    url: "https://github.com/avaneev/komihash/archive/refs/tags/5.25.zip"
+    sha256: "d5aa8d56651ba14b8aed032116659c03ef1950b5bef9f0f8e5bce0e2f239f6b0"
