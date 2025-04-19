@@ -1,0 +1,47 @@
+diff -ur a/src/ZeDMD.cpp b/src/ZeDMD.cpp
+--- a/src/ZeDMD.cpp	2025-04-19 19:11:00.707966026 +0000
++++ b/src/ZeDMD.cpp	2025-04-19 19:14:53.072392939 +0000
+@@ -819,7 +819,7 @@
+ 
+ ZEDMDAPI const char* ZeDMD_FormatLogMessage(const char* format, va_list args, const void* pUserData)
+ {
+-  char buffer[1024];
++  static char buffer[1024];
+   vsnprintf(buffer, sizeof(buffer), format, args);
+ 
+   return buffer;
+diff -ur a/src/ZeDMDComm.cpp b/src/ZeDMDComm.cpp
+--- a/src/ZeDMDComm.cpp	2025-04-19 19:11:00.707966026 +0000
++++ b/src/ZeDMDComm.cpp	2025-04-19 19:15:18.711996209 +0000
+@@ -1,6 +1,6 @@
+ #include "ZeDMDComm.h"
+ 
+-#include "komihash/komihash.h"
++#include "komihash.h"
+ #include "miniz/miniz.h"
+ 
+ ZeDMDComm::ZeDMDComm()
+diff -ur a/src/ZeDMDComm.h b/src/ZeDMDComm.h
+--- a/src/ZeDMDComm.h	2025-04-19 19:11:00.707966026 +0000
++++ b/src/ZeDMDComm.h	2025-04-19 19:14:22.464866543 +0000
+@@ -20,6 +20,7 @@
+ #include <string>
+ #include <thread>
+ #include <vector>
++#include <atomic>
+ 
+ #ifdef _MSC_VER
+ #define ZEDMDCALLBACK __stdcall
+diff -ur a/src/ZeDMDWiFi.cpp b/src/ZeDMDWiFi.cpp
+--- a/src/ZeDMDWiFi.cpp	2025-04-19 19:11:00.707966026 +0000
++++ b/src/ZeDMDWiFi.cpp	2025-04-19 19:15:06.132190859 +0000
+@@ -11,9 +11,6 @@
+ 
+ #include <sstream>
+ 
+-#include "komihash/komihash.h"
+-#include "miniz/miniz.h"
+-
+ bool ZeDMDWiFi::Connect(const char* name_or_ip)
+ {
+ #if defined(_WIN32) || defined(_WIN64)

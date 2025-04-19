@@ -1,0 +1,7 @@
+sources:
+  "0.9.6":
+    url: "https://github.com/PPUC/libzedmd/archive/refs/tags/v0.9.6.zip"
+    sha256: "60423cf14adfbabca03f5d599cbf1080f9fe45409d1bed783dc35fb62a7d9de7"
+patches:
+  "0.9.6":
+    - patch_file: "patches/001_build_with_conan.patch"
